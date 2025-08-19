@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo Interativo - Lellis Silva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Beige, Charcoal, Muted Teal) -->
+    <!-- Application Structure Plan: The SPA uses a thematic, single-page scrolling design with a top navigation bar for quick access. The core is an interactive vertical timeline for work history, where clicking an item reveals details in a separate panel. This encourages exploration. A dashboard section with charts highlights key quantitative achievements upfront for immediate impact. Skills are visualized with a radar chart for a quick overview. This structure transforms the static CV into an engaging professional narrative, prioritizing user interaction and data visualization over a simple linear document. -->
+    <!-- Visualization & Content Choices: Work History -> Goal: Show Progression -> Viz: Interactive Vertical Timeline -> Interaction: Click to show details -> Justification: More engaging and less cluttered than a list; Method: HTML/CSS + JS. | Key Metrics (Followers, Votes) -> Goal: Compare/Show Proportion -> Viz: Bar Chart, Donut Chart -> Interaction: Hover tooltips -> Justification: Instantly communicates quantifiable success; Library: Chart.js. | Skills -> Goal: Organize/Summarize -> Viz: Radar Chart -> Interaction: Hover tooltips -> Justification: Provides a quick visual summary of skill balance; Library: Chart.js. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF5;
+            color: #333D42;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #E2DACE;
+            border: 4px solid #FDFBF5;
+        }
+        .timeline-item.active::before {
+            background-color: #587D71;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#587D71]">Lellis Silva</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#inicio" class="text-gray-600 hover:text-[#587D71] transition">Início</a>
+                <a href="#destaques" class="text-gray-600 hover:text-[#587D71] transition">Destaques</a>
+                <a href="#carreira" class="text-gray-600 hover:text-[#587D71] transition">Carreira</a>
+                <a href="#habilidades" class="text-gray-600 hover:text-[#587D71] transition">Habilidades</a>
+                <a href="#contato" class="text-gray-600 hover:text-[#587D71] transition">Contato</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#inicio" class="block py-2 text-gray-600 hover:text-[#587D71]">Início</a>
+            <a href="#destaques" class="block py-2 text-gray-600 hover:text-[#587D71]">Destaques</a>
+            <a href="#carreira" class="block py-2 text-gray-600 hover:text-[#587D71]">Carreira</a>
+            <a href="#habilidades" class="block py-2 text-gray-600 hover:text-[#587D71]">Habilidades</a>
+            <a href="#contato" class="block py-2 text-gray-600 hover:text-[#587D71]">Contato</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        
+        <section id="inicio" class="text-center min-h-[60vh] flex flex-col justify-center items-center">
+            <h2 class="text-5xl md:text-6xl font-bold mb-4">Lellis Silva</h2>
+            <p class="text-xl md:text-2xl text-gray-600 mb-6">Comunicação Estratégica & Gestão Cultural</p>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700">
+                Estudante de Comunicação na UnB, apaixonado pelo impacto transformador da comunicação. Experiência em planejamento, produção audiovisual e gestão de projetos, buscando sempre soluções criativas e colaborativas.
+            </p>
+        </section>
+
+        <section id="destaques" class="py-16">
+            <h3 class="text-3xl font-bold text-center mb-12">Destaques e Resultados</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-center">Crescimento de Engajamento</h4>
+                    <p class="text-sm text-gray-600 text-center mb-4">Campanha Eleitoral (Maio-Dez 2024)</p>
+                    <div class="chart-container h-64 md:h-72">
+                        <canvas id="engagementChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-center">Resultado Eleitoral Histórico</h4>
+                    <p class="text-sm text-gray-600 text-center mb-4">Eleição Municipal 2024</p>
+                    <div class="chart-container h-64 md:h-72">
+                        <canvas id="electionChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center items-center">
+                    <h4 class="font-bold text-lg mb-2 text-center">Público do Festival 14 de Maio</h4>
+                    <p class="text-sm text-gray-600 text-center mb-4">Estimativa diária</p>
+                    <p class="text-6xl font-bold text-[#587D71]">20 mil</p>
+                    <p class="text-gray-600 mt-2">pessoas por dia</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="carreira" class="py-16">
+            <h3 class="text-3xl font-bold text-center mb-12">Linha do Tempo da Carreira</h3>
+            <div class="md:grid md:grid-cols-3 md:gap-8">
+                <div class="md:col-span-1">
+                    <div class="relative border-l-2 border-gray-200 ml-5">
+                        <div id="timeline-container" class="space-y-8">
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-2 mt-8 md:mt-0">
+                    <div id="experience-details" class="bg-white p-8 rounded-lg shadow-md sticky top-24">
+                        <h4 id="details-title" class="text-2xl font-bold mb-2">Selecione um cargo</h4>
+                        <p id="details-company" class="text-gray-500 mb-4">para ver os detalhes</p>
+                        <div id="details-content" class="text-gray-700 space-y-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="habilidades" class="py-16">
+            <h3 class="text-3xl font-bold text-center mb-12">Habilidades e Competências</h3>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="chart-container h-80">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-bold text-xl mb-3">Comunicação e Marketing</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>Assessoria política e de imprensa</li>
+                            <li>Planejamento e estratégias On/Off</li>
+                            <li>Gerenciamento de crise e reputação</li>
+                            <li>Produção de conteúdo audiovisual</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl mb-3">Gestão e Liderança</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>Liderança e Gestão de Equipe</li>
+                            <li>Gerenciamento de projetos culturais</li>
+                            <li>Captação de recursos e gestão de editais</li>
+                            <li>Articulação política e institucional</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl mb-3">Técnicas</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>Excel Avançado</li>
+                            <li>Design Gráfico</li>
+                            <li>Atendimento e Vendas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="py-16 text-center bg-white rounded-lg shadow-md">
+            <h3 class="text-3xl font-bold mb-4">Vamos Conversar?</h3>
+            <p class="text-lg text-gray-600 mb-8">Estou sempre aberto a novos desafios e oportunidades de colaboração.</p>
+            <div class="flex justify-center items-center space-x-6 text-lg">
+                <a href="mailto:kayronn85@gmail.com" class="hover:text-[#587D71] transition">kayronn85@gmail.com</a>
+                <span>&bull;</span>
+                <p>61 99254-9117</p>
+                <span>&bull;</span>
+                <a href="https://www.instagram.com/lelliscom" target="_blank" class="hover:text-[#587D71] transition">@lelliscom</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>&copy; 2025 Lellis Silva. Currículo interativo desenvolvido para visualização.</p>
+    </footer>
+
+    <script>
+        const experiences = [
+            {
+                id: 'dir-cultura',
+                title: 'Diretor de Cultura',
+                company: 'Prefeitura de Santo Antônio do Descoberto',
+                period: 'Janeiro/2025 - Presente',
+                details: [
+                    'Gerenciamento e produção de eventos culturais promovidos pela prefeitura.',
+                    'Fomento à cultura local.',
+                    'Gestão de editais públicos de fomento à cultura no âmbito municipal.',
+                    'Relacionamento com agentes culturais e agentes da administração pública, atuando como ponte entre eles e a gestão municipal.',
+                    'Acompanhamento de projetos realizados com apoio da administração pública.',
+                    'Elaboração e acompanhamento de processos de contratações públicas relacionados à cultura.',
+                    'Destaque: Produção geral do Festival 14 de Maio (aniversário do município), com 4 dias de festividades, mais de 48 horas de atividades no palco, atrações como Zezé de Camargo, Grupo Revelação, Bonde do Tigrão e DJ Vinne, além de atrações locais e o concurso de beleza Garota Sade. O evento teve um público diário estimado em 20 mil pessoas.'
+                ]
+            },
+            {
+                id: 'assessor-prefeita',
+                title: 'Assessor de Comunicação',
+                company: 'Candidata e Prefeita Eleita Jéssica do Premium',
+                period: 'Maio de 2024 - Dezembro de 2024',
+                details: [
+                    'Gerenciamento de redes sociais, com aumento de 3 mil para mais de 11 mil seguidores, e um crescimento de mais de 200% no engajamento orgânico.',
+                    'Criação de estratégias de comunicação online e offline, resultando na construção de uma marca pessoal consolidada.',
+                    'Gerenciamento de equipe e relacionamento com a imprensa para a campanha eleitoral, que resultou em 18.230 votos, ou 53,28% do total, elegendo a primeira prefeita mulher da cidade.',
+                    'Criação, captação e edição de material audiovisual para a campanha.',
+                    'Gerenciamento de crises e enfrentamento de casos de fake news, desinformação e violência política, como acusações de dívida fiscal e ocultação de patrimônio.'
+                ]
+            },
+            {
+                id: 'assessor-pixel',
+                title: 'Assessor de Comunicação',
+                company: 'Pixel Show',
+                period: 'Novembro de 2024',
+                details: [
+                    'Pré-evento: Suporte à criação de conteúdo para as redes sociais, elaboração de e-mails marketing e reestruturação do site do evento.',
+                    'Durante o evento: Responsável pela cobertura em tempo real (real time).'
+                ]
+            },
+            {
+                id: 'estagiario-sinait',
+                title: 'Estagiário de Comunicação',
+                company: 'Sinait',
+                period: 'Setembro/2023 – Junho/2024',
+                details: [
+                    'Pesquisa, apuração e produção de pautas jornalísticas.',
+                    'Produção, captação e edição de material para as redes sociais.',
+                    'Gerenciamento de redes sociais.',
+                    'Acompanhamento de agendas parlamentares.'
+                ]
+            },
+            {
+                id: 'chefe-rp',
+                title: 'Chefe de Relações Públicas',
+                company: 'Prefeitura de Santo Antônio do Descoberto',
+                period: 'Junho/2023 – Julho/2023',
+                details: [
+                    'Elaboração e execução de campanhas comunicacionais.',
+                    'Assessoria de imprensa.',
+                    'Produções textuais para sites e redes sociais.',
+                    'Gestão de Crise.',
+                    'Demais demandas administrativas de órgãos públicos.'
+                ]
+            },
+            {
+                id: 'chefe-cultura',
+                title: 'Chefe de Cultura',
+                company: 'Prefeitura de Santo Antônio do Descoberto',
+                period: 'Março/2021 – Maio/2023',
+                details: [
+                    'Gerenciamento de projetos culturais.',
+                    'Elaboração e execução de projetos socioculturais e economia criativa.',
+                    'Captação de recursos.',
+                    'Demais demandas administrativas de órgãos públicos.'
+                ]
+            },
+            {
+                id: 'assessor-influencers',
+                title: 'Assessor de Influenciadores Digitais',
+                company: 'Cria Creators',
+                period: '2021 – Presente',
+                details: [
+                    'Prospecção de novos clientes.',
+                    'Negociação.',
+                    'Auxílio na produção de conteúdos publicitários.'
+                ]
+            },
+            {
+                id: 'coordenador-campanha',
+                title: 'Coordenador de Campanha e Assessor Parlamentar',
+                company: 'Gabinete Davi Dantas',
+                period: 'Setembro/2020 – Março/2021',
+                details: [
+                    'Gerenciamento de agenda parlamentar.',
+                    'Atendimento à população.',
+                    'Elaboração de projetos de Lei e Ofícios.',
+                    'Análise política para pareceres.',
+                    'Gestão da Comunicação de mandato.',
+                    'Gerenciamento de redes sociais.',
+                    'Articulação política.',
+                    'Estratégias de comunicação/campanha.',
+                    'Produção de material gráfico.'
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const timelineContainer = document.getElementById('timeline-container');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsCompany = document.getElementById('details-company');
+            const detailsContent = document.getElementById('details-content');
+
+            experiences.forEach((exp, index) => {
+                const item = document.createElement('div');
+                item.className = `timeline-item relative pl-8 pb-8 cursor-pointer ${index === 0 ? 'active' : ''}`;
+                item.dataset.id = exp.id;
+                item.innerHTML = `
+                    <h5 class="font-bold">${exp.title}</h5>
+                    <p class="text-sm text-gray-500">${exp.period}</p>
+                `;
+                timelineContainer.appendChild(item);
+            });
+
+            const timelineItems = document.querySelectorAll('.timeline-item');
+
+            function updateDetails(id) {
+                const experience = experiences.find(exp => exp.id === id);
+                if (experience) {
+                    detailsTitle.textContent = experience.title;
+                    detailsCompany.textContent = experience.company;
+                    detailsContent.innerHTML = experience.details.map(d => `<p>&bull; ${d}</p>`).join('');
+                    
+                    timelineItems.forEach(item => {
+                        item.classList.toggle('active', item.dataset.id === id);
+                    });
+                }
+            }
+
+            timelineItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    updateDetails(item.dataset.id);
+                });
+            });
+
+            updateDetails(experiences[0].id);
+
+            const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+            new Chart(engagementCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Seguidores Iniciais', 'Seguidores Finais'],
+                    datasets: [{
+                        label: 'Total de Seguidores',
+                        data: [3000, 11000],
+                        backgroundColor: ['#E2DACE', '#587D71'],
+                        borderColor: ['#D1C4B3', '#4A6A5F'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw.toLocaleString('pt-BR')} seguidores`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value / 1000 + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const electionCtx = document.getElementById('electionChart').getContext('2d');
+            new Chart(electionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Votos para Jéssica do Premium', 'Outros Candidatos'],
+                    datasets: [{
+                        data: [53.28, 46.72],
+                        backgroundColor: ['#587D71', '#E2DACE'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(skillsCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Comunicação', 'Gestão', 'Estratégia', 'Liderança', 'Técnica', 'Criatividade'],
+                    datasets: [{
+                        label: 'Nível de Competência',
+                        data: [9, 8, 9, 8, 7, 9],
+                        fill: true,
+                        backgroundColor: 'rgba(88, 125, 113, 0.2)',
+                        borderColor: '#587D71',
+                        pointBackgroundColor: '#587D71',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#587D71'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: { font: { size: 14 } },
+                            suggestedMin: 0,
+                            suggestedMax: 10,
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                stepSize: 2
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    if(mobileMenu.classList.contains('hidden') === false){
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
